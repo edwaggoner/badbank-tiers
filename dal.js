@@ -24,10 +24,24 @@ function create(name, email, password) {
 // login user
 function login(email, password) {
 	return new Promise((resolve, reject) => {
-		const access = db.collection('logins');
-		const doc = { email, password };
-		access.insertOne(doc, { w: 1 }, function (err, result) {
-			err ? reject(err) : resolve(doc);
+		const users = db.collection('users');
+		console.log(`Logging in ${email}:${password}`);
+		// check email+password against user list
+		const userPromise = users.findOne({ email, password });
+
+		userPromise.then((user) => {
+			if (user === null) {
+				reject({ error: 'Invalid login.' });
+				console.log('Login failed.');
+			} else {
+				console.log('Logged IN!:');
+				console.dir(user);
+				resolve({
+					name: user.name,
+					email: user.email,
+					balance: user.balance,
+				});
+			}
 		});
 	});
 }

@@ -39,9 +39,15 @@ function CreateForm(props) {
 	const [password, setPassword] = React.useState('');
 	const ctx = React.useContext(UserContext);
 
+	// from video 27.21 at 0:34
 	function handle() {
 		console.log(name, email, password);
-		ctx.users.push({ name, email, password, balance: 100 });
+		const url = `/account/create/${name}/${email}/${password}`;
+		(async () => {
+			const res = await fetch(url);
+			const data = await res.json();
+			console.log(data);
+		})();
 		props.setShow(false);
 	}
 

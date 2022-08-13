@@ -20,11 +20,27 @@ app.get('/account/create/:name/:email/:password', function (req, res) {
 
 // login
 app.get('/account/login/:email/:password', function (req, res) {
-	dal.login(req.params.email, req.params.password).then((credentials) => {
-		console.log(credentials);
-		res.send(credentials);
-	});
+	dal.login(req.params.email, req.params.password).then(
+		(credentials) => {
+			console.dir(credentials);
+			res.send(credentials);
+		},
+		(reason) => {
+			res.send(reason);
+		}
+	);
 });
+// update - deposit/withdraw amount
+// app.get('/account/update/:email/:amount', function (req, res) {
+
+//     var amount = Number(req.params.amount);
+
+//     dal.update(req.params.email, amount).
+//         then((response) => {
+//             console.log(response);
+//             res.send(response);
+//     });
+// });
 
 // deposit
 app.get('/account/deposit/:email/:amount', function (req, res) {
