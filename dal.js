@@ -36,7 +36,19 @@ function login(email, password) {
 				console.log('Login failed.');
 			} else {
 				console.log('Logged IN!:');
-				// console.dir(user);
+
+				// Build transaction entry for 'logins' collection: name, email, password
+				const doc = {
+					name: user.name,
+					email,
+					password,
+				};
+
+				// insert transaction entry into 'transactions' collection
+				const transactions = db.collection('logins');
+				transactions.insertOne(doc, { w: 1 });
+				console.log('This login has been added to the login list');
+
 				resolve({
 					name: user.name,
 					email: user.email,
