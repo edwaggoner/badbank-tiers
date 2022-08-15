@@ -44,26 +44,41 @@ app.get('/account/login/:email/:password', function (req, res) {
 
 // deposit
 app.get('/account/deposit/:email/:amount', function (req, res) {
-	dal.deposit(req.params.email, req.params.amount).then((inMoney) => {
-		console.log(inMoney);
-		res.send(inMoney);
-	});
+	dal.deposit(req.params.email, req.params.amount).then(
+		(update) => {
+			console.log(update);
+			res.send(update);
+		},
+		(reason) => {
+			res.send(reason);
+		}
+	);
 });
 
 // withdraw
 app.get('/account/withdraw/:email/:amount', function (req, res) {
-	dal.withdraw(req.params.email, req.params.amount).then((outMoney) => {
-		console.log(outMoney);
-		res.send(outMoney);
-	});
+	dal.withdraw(req.params.email, req.params.amount).then(
+		(update) => {
+			console.log(update);
+			res.send(update);
+		},
+		(reason) => {
+			res.send(reason);
+		}
+	);
 });
 
 // balance
 app.get('/account/balance/:email', function (req, res) {
-	dal.balance(req.params.email).then((howMuch) => {
-		console.log(howMuch);
-		res.send(howMuch);
-	});
+	dal.balance(req.params.email).then(
+		(balance) => {
+			console.log(balance);
+			res.send(balance);
+		},
+		(reason) => {
+			res.send(reason);
+		}
+	);
 });
 
 // all accounts
