@@ -46,12 +46,12 @@ function TransactionListForm(props) {
 			const resFromExpress = await fetch(url);
 			const data = await resFromExpress.json();
 			return data;
-		})().then((user) => {
-			if (user.error) {
-				console.log(user.error);
+		})().then((userTransactionList) => {
+			if (userTransactionList.error) {
+				console.log(userTransactionList.error);
 			} else {
 				console.log('Successful login');
-				console.dir(user);
+				console.dir(userTransactionList);
 			}
 		});
 	}

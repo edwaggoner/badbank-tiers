@@ -259,16 +259,20 @@ function transactionList(email, password) {
 			} else {
 				console.log('User confirmed');
 
-				// get handle on all of the user's entries in the 'transactions' collection
+				// get all of the user's entries in the 'transactions' collection
 				const transactions = db.collection('transactions');
-				const findResult = transactions.find({
+				const list = transactions.find({
 					name: user.name,
 				});
 
-				resolve({
-					name: user.name,
-					email: user.email,
-					balance: user.balance,
+				const receivedTransactionList = [];
+				const forEachDonePromise = list.forEach((doc) => {
+					delete doc._id;
+					receivedTransactionList.push(doc);
+				});
+
+				forEachDonePromise.then(() => {
+					resolve({ receivedTransactionList });
 				});
 			}
 		});
@@ -287,4 +291,12 @@ function all() {
 	});
 }
 
-module.exports = { create, login, deposit, withdraw, balance, all };
+module.exports = {
+	create,
+	login,
+	deposit,
+	withdraw,
+	balance,
+	transactionList,
+	all,
+};

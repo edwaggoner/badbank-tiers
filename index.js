@@ -73,9 +73,9 @@ app.get('/account/balance/:email', function (req, res) {
 // transaction list
 app.get('/account/transactionlist/:email/:password', function (req, res) {
 	dal.transactionList(req.params.email, req.params.password).then(
-		(credentials) => {
-			console.dir(credentials);
-			res.send(credentials);
+		(userTransactionList) => {
+			console.dir(userTransactionList);
+			res.send(userTransactionList);
 		},
 		(reason) => {
 			res.send(reason);
