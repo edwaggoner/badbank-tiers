@@ -1,24 +1,24 @@
-function Login() {
+function TransactionList() {
 	const [show, setShow] = React.useState(true);
 	const [status, setStatus] = React.useState('');
 
 	return (
 		<Card
 			bgcolor="secondary"
-			header="Login"
+			header="Login for Transaction List"
 			status={status}
 			body={
 				show ? (
-					<LoginForm setShow={setShow} setStatus={setStatus} />
+					<TransactionListForm setShow={setShow} setStatus={setStatus} />
 				) : (
-					<LoginMsg setShow={setShow} setStatus={setStatus} />
+					<TransactionListMsg setShow={setShow} setStatus={setStatus} />
 				)
 			}
 		/>
 	);
 }
 
-function LoginMsg(props) {
+function TransactionListMsg(props) {
 	return (
 		<>
 			<h5>Success</h5>
@@ -33,7 +33,7 @@ function LoginMsg(props) {
 	);
 }
 
-function LoginForm(props) {
+function TransactionListForm(props) {
 	const [email, setEmail] = React.useState('');
 	const [password, setPassword] = React.useState('');
 
@@ -41,7 +41,7 @@ function LoginForm(props) {
 
 	function handle() {
 		console.log(email, password);
-		const url = `/account/login/${email}/${password}`;
+		const url = `/account/transactionlist/${email}/${password}`;
 		(async () => {
 			const resFromExpress = await fetch(url);
 			const data = await resFromExpress.json();

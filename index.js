@@ -30,17 +30,6 @@ app.get('/account/login/:email/:password', function (req, res) {
 		}
 	);
 });
-// update - deposit/withdraw amount
-// app.get('/account/update/:email/:amount', function (req, res) {
-
-//     var amount = Number(req.params.amount);
-
-//     dal.update(req.params.email, amount).
-//         then((response) => {
-//             console.log(response);
-//             res.send(response);
-//     });
-// });
 
 // deposit
 app.get('/account/deposit/:email/:amount', function (req, res) {
@@ -74,6 +63,19 @@ app.get('/account/balance/:email', function (req, res) {
 		(balance) => {
 			console.log(balance);
 			res.send(balance);
+		},
+		(reason) => {
+			res.send(reason);
+		}
+	);
+});
+
+// transaction list
+app.get('/account/transactionlist/:email/:password', function (req, res) {
+	dal.transactionList(req.params.email, req.params.password).then(
+		(credentials) => {
+			console.dir(credentials);
+			res.send(credentials);
 		},
 		(reason) => {
 			res.send(reason);

@@ -1,3 +1,5 @@
+const { CURSOR_FLAGS } = require('mongodb');
+
 const MongoClient = require('mongodb').MongoClient;
 const url = 'mongodb://localhost:27017';
 let db = null;
@@ -234,6 +236,38 @@ function balance(email) {
 					name: user.name,
 					email: user.email,
 					transaction: 'balance check',
+					balance: user.balance,
+				});
+			}
+		});
+	});
+}
+
+// transaction list
+function transactionList(email, password) {
+	return new Promise((resolve, reject) => {
+		const users = db.collection('users');
+		console.log(`Checking ${email}:${password} against user list`);
+		// check email+password against user list
+		const userPromise = users.findOne({ email, password });
+
+		userPromise.then((user) => {
+			console.log(user);
+			if (user === null) {
+				reject({ error: 'Invalid login.' });
+				console.log('Login failed.');
+			} else {
+				console.log('User confirmed');
+
+				// get handle on all of the user's entries in the 'transactions' collection
+				const transactions = db.collection('transactions');
+				const findResult = transactions.find({
+					name: user.name,
+				});
+
+				resolve({
+					name: user.name,
+					email: user.email,
 					balance: user.balance,
 				});
 			}

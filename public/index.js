@@ -25,6 +25,7 @@ function Spa() {
 							{/* <Route path="/transactions/" element={<Transactions/>} /> */}
 							<Route path="/balance/" element={<Balance />} />
 							<Route path="/alldata/" element={<AllData />} />
+							<Route path="/transactionlist/" element={<TransactionList />} />
 						</Routes>
 					</div>
 				</UserContext.Provider>
