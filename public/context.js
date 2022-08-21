@@ -1,5 +1,6 @@
 const { Routes, Route, Link, HashRouter } = ReactRouterDOM;
 const UserContext = React.createContext(null);
+UserContext.displayName = 'User Context';
 
 function Card(props) {
 	function classes() {

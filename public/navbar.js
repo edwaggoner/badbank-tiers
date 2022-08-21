@@ -1,8 +1,42 @@
 function NavBar() {
+	const ctx = React.useContext(UserContext);
+
+	const depositLink = (
+		<li className="nav-item">
+			<a className="nav-link" href="/#/deposit/">
+				Deposit
+			</a>
+		</li>
+	);
+
+	const withdrawLink = (
+		<li className="nav-item">
+			<a className="nav-link" href="/#/withdraw/">
+				Withdraw
+			</a>
+		</li>
+	);
+
+	const balanceLink = (
+		<li className="nav-item">
+			<a className="nav-link" href="/#/balance/">
+				Balance
+			</a>
+		</li>
+	);
+
+	const transactionListLink = (
+		<li className="nav-item">
+			<a className="nav-link" href="/#/transactionlist/">
+				Transaction List
+			</a>
+		</li>
+	);
+
 	return (
 		<nav className="navbar navbar-expand-lg navbar-light bg-light">
 			<a className="navbar-brand" href="#">
-				BadBank
+				GoodBank
 			</a>
 			<button
 				className="navbar-toggler"
@@ -27,28 +61,14 @@ function NavBar() {
 							Login
 						</a>
 					</li>
-					<li className="nav-item">
-						<a className="nav-link" href="/#/deposit/">
-							Deposit
-						</a>
-					</li>
-					<li className="nav-item">
-						<a className="nav-link" href="/#/withdraw/">
-							Withdraw
-						</a>
-					</li>
-					<li className="nav-item">
-						<a className="nav-link" href="/#/balance/">
-							Balance
-						</a>
-					</li>
-					<li className="nav-item">
-						<a className="nav-link" href="/#/transactionlist/">
-							Transaction List
-						</a>
-					</li>
+					{ctx.user.name ? depositLink : ''}
+					{ctx.user.name ? withdrawLink : ''}
+					{ctx.user.name ? balanceLink : ''}
+					{ctx.user.name ? transactionListLink : ''}
 				</ul>
 			</div>
+			{ctx.user.name ? `Welcome, ${ctx.user.name}!` : ''}
+			{/* {ctx.user.name ? <button for Logout>Logout</button> : ""} */}
 		</nav>
 	);
 }

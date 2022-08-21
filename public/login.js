@@ -52,6 +52,7 @@ function LoginForm(props) {
 			} else {
 				console.log('Successful login');
 				console.dir(user);
+				ctx.setUser(user);
 			}
 		});
 	}
@@ -81,6 +82,7 @@ function LoginForm(props) {
 			<button type="submit" className="btn btn-light" onClick={handle}>
 				Login
 			</button>
+			Welcome, {ctx.user.name}
 		</>
 	);
 }
