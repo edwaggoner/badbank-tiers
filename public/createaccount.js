@@ -22,13 +22,13 @@ function CreateMsg(props) {
 	return (
 		<>
 			<h5>Success</h5>
-			<button
+			{/* <button
 				type="submit"
 				className="btn btn-light"
 				onClick={() => props.setShow(true)}
 			>
 				Add another account
-			</button>
+			</button> */}
 		</>
 	);
 }
@@ -37,6 +37,7 @@ function CreateForm(props) {
 	const [name, setName] = React.useState('');
 	const [email, setEmail] = React.useState('');
 	const [password, setPassword] = React.useState('');
+
 	const ctx = React.useContext(UserContext);
 
 	// from video 27.21 at 0:34
@@ -46,8 +47,15 @@ function CreateForm(props) {
 		(async () => {
 			const res = await fetch(url);
 			const data = await res.json();
-			console.log(data);
-		})();
+			return data;
+		})().then((user) => {
+			if (user.error) {
+				console.log(user.error);
+			} else {
+				console.dir(user);
+				ctx.setUser(user);
+			}
+		});
 		props.setShow(false);
 	}
 

@@ -1,6 +1,22 @@
 function NavBar() {
 	const ctx = React.useContext(UserContext);
 
+	const createAccountLink = (
+		<li className="nav-item">
+			<a className="nav-link" href="/#/CreateAccount/">
+				Create Account
+			</a>
+		</li>
+	);
+
+	const loginLink = (
+		<li className="nav-item">
+			<a className="nav-link" href="/#/login/">
+				Login
+			</a>
+		</li>
+	);
+
 	const depositLink = (
 		<li className="nav-item">
 			<a className="nav-link" href="/#/deposit/">
@@ -33,6 +49,12 @@ function NavBar() {
 		</li>
 	);
 
+	const logoutLink = (
+		<a className="btn btn-outline-primary btn-sm" href="/" role="button">
+			Logout
+		</a>
+	);
+
 	return (
 		<nav className="navbar navbar-expand-lg navbar-light bg-light">
 			<a className="navbar-brand" href="#">
@@ -51,16 +73,8 @@ function NavBar() {
 			</button>
 			<div className="collapse navbar-collapse" id="navbarNav">
 				<ul className="navbar-nav">
-					<li className="nav-item">
-						<a className="nav-link" href="/#/CreateAccount/">
-							Create Account
-						</a>
-					</li>
-					<li className="nav-item">
-						<a className="nav-link" href="/#/login/">
-							Login
-						</a>
-					</li>
+					{!ctx.user.name ? createAccountLink : ''}
+					{!ctx.user.name ? loginLink : ''}
 					{ctx.user.name ? depositLink : ''}
 					{ctx.user.name ? withdrawLink : ''}
 					{ctx.user.name ? balanceLink : ''}
@@ -68,7 +82,7 @@ function NavBar() {
 				</ul>
 			</div>
 			{ctx.user.name ? `Welcome, ${ctx.user.name}!` : ''}
-			{/* {ctx.user.name ? <button for Logout>Logout</button> : ""} */}
+			{ctx.user.name ? logoutLink : ''}
 		</nav>
 	);
 }
