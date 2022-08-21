@@ -50,7 +50,8 @@ function WithdrawForm(props) {
 				console.log(update.error);
 			} else {
 				console.log('Successful withdrawal.');
-				console.dir(update);
+				console.log(update.balance);
+				ctx.setUser(update);
 			}
 		});
 	}

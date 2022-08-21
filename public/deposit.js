@@ -51,6 +51,7 @@ function DepositForm(props) {
 			} else {
 				console.log('Successful deposit.');
 				console.dir(update);
+				ctx.setUser(update);
 			}
 		});
 	}

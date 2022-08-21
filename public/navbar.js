@@ -81,7 +81,10 @@ function NavBar() {
 					{ctx.user.name ? transactionListLink : ''}
 				</ul>
 			</div>
-			{ctx.user.name ? `Welcome, ${ctx.user.name}!` : ''}
+			{ctx.user.name ? `${ctx.user.name}` : ''}
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			{ctx.user.name ? `Account balance: ${ctx.user.balance}` : ''}
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			{ctx.user.name ? logoutLink : ''}
 		</nav>
 	);

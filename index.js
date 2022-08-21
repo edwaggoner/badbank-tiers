@@ -48,7 +48,6 @@ app.get('/account/deposit/:email/:amount', function (req, res) {
 app.get('/account/withdraw/:email/:amount', function (req, res) {
 	dal.withdraw(req.params.email, req.params.amount).then(
 		(update) => {
-			console.log(update);
 			res.send(update);
 		},
 		(reason) => {
