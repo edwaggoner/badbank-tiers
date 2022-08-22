@@ -1,6 +1,4 @@
 function Login() {
-	// const [showSuccess, setShowSuccess] = React.useState(true);
-	// const [showFailure, setShowFailure] = React.useState(true);
 	const [show, setShow] = React.useState(true);
 	const [status, setStatus] = React.useState('');
 
@@ -22,6 +20,7 @@ function Login() {
 
 function LoginMsg(props) {
 	const ctx = React.useContext(UserContext);
+
 	return (
 		<>
 			<h5>Welcome,</h5>
@@ -41,7 +40,7 @@ function LoginMsg(props) {
 function LoginForm(props) {
 	const [email, setEmail] = React.useState('');
 	const [password, setPassword] = React.useState('');
-
+	const [usererror, setUsererror] = React.useState(false);
 	const ctx = React.useContext(UserContext);
 
 	function handle() {
@@ -88,6 +87,7 @@ function LoginForm(props) {
 			<button type="submit" className="btn btn-light" onClick={handle}>
 				Login
 			</button>
+			<br />
 		</>
 	);
 }
