@@ -40,6 +40,8 @@ function CreateForm(props) {
 
 	const ctx = React.useContext(UserContext);
 
+	// add firebase authentication sign-up
+
 	// from video 27.21 at 0:34
 	function handle() {
 		console.log(name, email, password);
