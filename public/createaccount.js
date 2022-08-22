@@ -21,7 +21,7 @@ function CreateAccount() {
 function CreateMsg(props) {
 	return (
 		<>
-			<h5>Success</h5>
+			<h5>Success!</h5>
 			{/* <button
 				type="submit"
 				className="btn btn-light"

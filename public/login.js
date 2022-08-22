@@ -1,11 +1,13 @@
 function Login() {
+	// const [showSuccess, setShowSuccess] = React.useState(true);
+	// const [showFailure, setShowFailure] = React.useState(true);
 	const [show, setShow] = React.useState(true);
 	const [status, setStatus] = React.useState('');
 
 	return (
 		<Card
 			bgcolor="secondary"
-			header="Login"
+			header={show ? 'Login' : ''}
 			status={status}
 			body={
 				show ? (
@@ -19,16 +21,19 @@ function Login() {
 }
 
 function LoginMsg(props) {
+	const ctx = React.useContext(UserContext);
 	return (
 		<>
-			<h5>Success</h5>
-			<button
+			<h5>Welcome,</h5>
+			<h5>{ctx.user.name}!</h5>
+			<h6>You are now logged in.</h6>
+			{/* <button
 				type="submit"
 				className="btn btn-light"
 				onClick={() => props.setShow(true)}
 			>
 				Authenticate again
-			</button>
+			</button> */}
 		</>
 	);
 }
@@ -53,6 +58,7 @@ function LoginForm(props) {
 				console.log('Successful login');
 				console.dir(user);
 				ctx.setUser(user);
+				props.setShow(false);
 			}
 		});
 	}
@@ -82,7 +88,6 @@ function LoginForm(props) {
 			<button type="submit" className="btn btn-light" onClick={handle}>
 				Login
 			</button>
-			Welcome, {ctx.user.name}
 		</>
 	);
 }
