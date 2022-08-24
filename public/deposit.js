@@ -22,6 +22,7 @@ function DepositMsg(props) {
 	return (
 		<>
 			<h5>Success</h5>
+			<h6>Your new balance appears above</h6>
 			<button
 				type="submit"
 				className="btn btn-light"
@@ -48,10 +49,14 @@ function DepositForm(props) {
 		})().then((update) => {
 			if (update.error) {
 				console.log(update.error);
+				props.setStatus('fail');
+				return;
 			} else {
 				console.log('Successful deposit.');
 				console.dir(update);
 				ctx.setUser(update);
+				props.setStatus('');
+				props.setShow(false);
 			}
 		});
 	}

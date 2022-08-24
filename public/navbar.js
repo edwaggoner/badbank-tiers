@@ -48,9 +48,9 @@ function NavBar() {
 			</a>
 		</li>
 	);
-
+	// className="btn btn-outline-primary btn-sm"
 	const logoutLink = (
-		<a className="btn btn-outline-primary btn-sm" href="/" role="button">
+		<a href="/" role="button">
 			Logout
 		</a>
 	);
@@ -77,7 +77,7 @@ function NavBar() {
 					{!ctx.user.name ? loginLink : ''}
 					{ctx.user.name ? depositLink : ''}
 					{ctx.user.name ? withdrawLink : ''}
-					{ctx.user.name ? balanceLink : ''}
+					{/* {ctx.user.name ? balanceLink : ''} */}
 					{ctx.user.name ? transactionListLink : ''}
 				</ul>
 			</div>

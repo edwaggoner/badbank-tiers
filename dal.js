@@ -200,48 +200,48 @@ function withdraw(email, amount) {
 }
 
 //balance
-function balance(email) {
-	return new Promise((resolve, reject) => {
-		const users = db.collection('users');
+// function balance(email) {
+// 	return new Promise((resolve, reject) => {
+// 		const users = db.collection('users');
 
-		// check submitted email against emails in 'users' collection
-		const userPromise = users.findOne({ email });
+// 		// check submitted email against emails in 'users' collection
+// 		const userPromise = users.findOne({ email });
 
-		userPromise.then((user) => {
-			// if submitted email does not match any in 'users' collection, reject deposit
-			console.log(user);
-			if (user === null) {
-				reject({ error: 'Invalid inquiry.' });
-				console.log('Inquiry failed.');
-			} else {
-				// if submitted email DOES match, update balance and create transaction record
-				console.log(`User ${user.name} balance is: ${user.balance}`);
+// 		userPromise.then((user) => {
+// 			// if submitted email does not match any in 'users' collection, reject deposit
+// 			console.log(user);
+// 			if (user === null) {
+// 				reject({ error: 'Invalid inquiry.' });
+// 				console.log('Inquiry failed.');
+// 			} else {
+// 				// if submitted email DOES match, update balance and create transaction record
+// 				console.log(`User ${user.name} balance is: ${user.balance}`);
 
-				// Build transaction entry for 'transactions' collection: name, email, transaction amount, updated balance
-				const doc = {
-					name: user.name,
-					email,
-					transaction: 'balance check',
-					balance: user.balance,
-				};
+// 				// Build transaction entry for 'transactions' collection: name, email, transaction amount, updated balance
+// 				const doc = {
+// 					name: user.name,
+// 					email,
+// 					transaction: 'balance check',
+// 					balance: user.balance,
+// 				};
 
-				// insert transaction entry into 'transactions' collection
-				const transactions = db.collection('transactions');
-				transactions.insertOne(doc, { w: 1 });
-				console.log(
-					'This balance inquiry has been logged in the transaction list'
-				);
+// 				// insert transaction entry into 'transactions' collection
+// 				const transactions = db.collection('transactions');
+// 				transactions.insertOne(doc, { w: 1 });
+// 				console.log(
+// 					'This balance inquiry has been logged in the transaction list'
+// 				);
 
-				resolve({
-					name: user.name,
-					email: user.email,
-					transaction: 'balance check',
-					balance: user.balance,
-				});
-			}
-		});
-	});
-}
+// 				resolve({
+// 					name: user.name,
+// 					email: user.email,
+// 					transaction: 'balance check',
+// 					balance: user.balance,
+// 				});
+// 			}
+// 		});
+// 	});
+// }
 
 // transaction list
 function transactionList(email, password) {
@@ -296,7 +296,7 @@ module.exports = {
 	login,
 	deposit,
 	withdraw,
-	balance,
+	// balance,
 	transactionList,
 	all,
 };

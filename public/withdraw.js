@@ -22,6 +22,7 @@ function WithdrawMsg(props) {
 	return (
 		<>
 			<h5>Success</h5>
+			<h6>Your new balance appears above</h6>
 			<button
 				type="submit"
 				className="btn btn-light"
@@ -48,10 +49,14 @@ function WithdrawForm(props) {
 		})().then((update) => {
 			if (update.error) {
 				console.log(update.error);
+				props.setStatus('fail');
+				return;
 			} else {
 				console.log('Successful withdrawal.');
 				console.log(update.balance);
 				ctx.setUser(update);
+				props.setStatus('');
+				props.setShow(false);
 			}
 		});
 	}
@@ -59,8 +64,8 @@ function WithdrawForm(props) {
 	//   console.log(email,amount);
 	//   const user = ctx.users.find((user) => user.email == email);
 	//   if (!user) {
-	//     props.setStatus('fail!')
-	//     return;
+	// 	props.setStatus('fail!')
+	//	return;
 	//   }
 
 	//   user.balance = user.balance - Number(amount);

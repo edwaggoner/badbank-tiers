@@ -22,6 +22,9 @@ function CreateMsg(props) {
 	return (
 		<>
 			<h5>Success!</h5>
+			<br />
+			<h6>Your name and account balance</h6>
+			<h6>are displayed above</h6>
 			{/* <button
 				type="submit"
 				className="btn btn-light"
