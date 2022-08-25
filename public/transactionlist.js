@@ -1,12 +1,14 @@
 function TransactionList() {
-	// const [email, setEmail] = React.useState('');
-	// const [password, setPassword] = React.useState('');
-
+	// const [status, setStatus] = React.useState(false);
 	const ctx = React.useContext(UserContext);
 
 	let list;
 
+	const rat = 7;
+
 	function handle() {
+		// const ctx = React.useContext(UserContext);
+
 		const url = `/account/transactionlist/${ctx.user.email}/${ctx.user.password}`;
 		(async () => {
 			const resFromExpress = await fetch(url);
@@ -18,8 +20,11 @@ function TransactionList() {
 			} else {
 				list = userTransactionList['receivedTransactionList'];
 				console.log(list);
+				// console.log(list[1]);
+				// console.log(list[2]);
 			}
 		});
+		// console.log(list);
 	}
 
 	// const displayList = (
@@ -34,12 +39,12 @@ function TransactionList() {
 	// 				</tr>
 	// 			</thead>
 	// 			<tbody>
-	// 				{list.map((i) => (
+	// 				{list.map((element, i) => (
 	// 					<tr key={i}>
-	// 						<td>{transaction.name}</td>
-	// 						<td>{transaction.email}</td>
-	// 						<td>{transaction.transaction}</td>
-	// 						<td>${transaction.balance.toFixed(2)}</td>
+	// 						<td>{i.name}</td>
+	// 						<td>{i.email}</td>
+	// 						<td>{i.transaction}</td>
+	// 						<td>${i.balance.toFixed(2)}</td>
 	// 					</tr>
 	// 				))}
 	// 			</tbody>
@@ -52,32 +57,33 @@ function TransactionList() {
 			<button type="submit" className="btn btn-light" onClick={handle}>
 				List Your Transactions
 			</button>
-			<br />
-			{list ? displayList : ''}
-
-			{/* Email
-			<br />
-			<input
-				type="input"
-				className="form-control"
-				placeholder="Enter email"
-				value={email}
-				onChange={(e) => setEmail(e.currentTarget.value)}
-			/>
-			<br />
-			Password
-			<br />
-			<input
-				type="password"
-				className="form-control"
-				placeholder="Enter password"
-				value={password}
-				onChange={(e) => setPassword(e.currentTarget.value)}
-			/>
-			<br />
-			<button type="submit" className="btn btn-light" onClick={handle}>
-				Login
-			</button> */}
+			<table className="table table-success table-hover">
+				<thead>
+					<tr>
+						<th scope="col">Name</th>
+						<th scope="col">Email</th>
+						<th scope="col">Transaction</th>
+						<th scope="col">Current Balance</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>{rat}</td>
+						<td>help</td>
+						<td>me</td>
+						<td>good angel</td>
+						{/* <td>{.email}</td>
+                <td>{user.password}</td>
+                <td>${user.balance.toFixed(2)}</td> */}
+					</tr>
+					<tr>
+						<td>{rat}</td>
+						<td>help</td>
+						<td>me</td>
+						<td>good angel</td>
+					</tr>
+				</tbody>
+			</table>
 		</>
 	);
 }

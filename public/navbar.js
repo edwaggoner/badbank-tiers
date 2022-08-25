@@ -48,7 +48,7 @@ function NavBar() {
 			</a>
 		</li>
 	);
-	// className="btn btn-outline-primary btn-sm"
+
 	const logoutLink = (
 		<a href="/" role="button">
 			Logout
