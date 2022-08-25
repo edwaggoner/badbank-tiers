@@ -40,8 +40,16 @@ function WithdrawForm(props) {
 	const ctx = React.useContext(UserContext);
 
 	function handle() {
-		console.log(email, amount);
-		const url = `/account/withdraw/${email}/${amount}`;
+		if (amount < 0) {
+			props.setStatus('Your withdrawal amount must be greater than zero.');
+			return;
+		} else if (amount > ctx.user.balance) {
+			props.setStatus('You may not withdraw more than your current balance.');
+			return;
+		}
+
+		console.log(amount);
+		const url = `/account/withdraw/${ctx.user.email}/${amount}`;
 		(async () => {
 			const resFromExpress = await fetch(url);
 			const data = await resFromExpress.json();
@@ -76,7 +84,7 @@ function WithdrawForm(props) {
 
 	return (
 		<>
-			Email
+			{/* Email
 			<br />
 			<input
 				type="input"
@@ -85,7 +93,7 @@ function WithdrawForm(props) {
 				value={email}
 				onChange={(e) => setEmail(e.currentTarget.value)}
 			/>
-			<br />
+			<br /> */}
 			Amount
 			<br />
 			<input

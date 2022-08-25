@@ -1,47 +1,13 @@
 function TransactionList() {
-	const [show, setShow] = React.useState(true);
-	const [status, setStatus] = React.useState('');
-
-	return (
-		<Card
-			bgcolor="secondary"
-			header="Login for Transaction List"
-			status={status}
-			body={
-				show ? (
-					<TransactionListForm setShow={setShow} setStatus={setStatus} />
-				) : (
-					<TransactionListMsg setShow={setShow} setStatus={setStatus} />
-				)
-			}
-		/>
-	);
-}
-
-function TransactionListMsg(props) {
-	return (
-		<>
-			<h5>Success</h5>
-			<button
-				type="submit"
-				className="btn btn-light"
-				onClick={() => props.setShow(true)}
-			>
-				Authenticate again
-			</button>
-		</>
-	);
-}
-
-function TransactionListForm(props) {
-	const [email, setEmail] = React.useState('');
-	const [password, setPassword] = React.useState('');
+	// const [email, setEmail] = React.useState('');
+	// const [password, setPassword] = React.useState('');
 
 	const ctx = React.useContext(UserContext);
 
+	let list;
+
 	function handle() {
-		console.log(email, password);
-		const url = `/account/transactionlist/${email}/${password}`;
+		const url = `/account/transactionlist/${ctx.user.email}/${ctx.user.password}`;
 		(async () => {
 			const resFromExpress = await fetch(url);
 			const data = await resFromExpress.json();
@@ -50,15 +16,46 @@ function TransactionListForm(props) {
 			if (userTransactionList.error) {
 				console.log(userTransactionList.error);
 			} else {
-				console.log('Successful login');
-				console.dir(userTransactionList);
+				list = userTransactionList['receivedTransactionList'];
+				console.log(list);
 			}
 		});
 	}
 
+	// const displayList = (
+	// 	<div>
+	// 		<table className="table table-success table-hover">
+	// 			<thead>
+	// 				<tr>
+	// 					<th scope="col">Name</th>
+	// 					<th scope="col">Email</th>
+	// 					<th scope="col">Transaction</th>
+	// 					<th scope="col">Balance</th>
+	// 				</tr>
+	// 			</thead>
+	// 			<tbody>
+	// 				{list.map((i) => (
+	// 					<tr key={i}>
+	// 						<td>{transaction.name}</td>
+	// 						<td>{transaction.email}</td>
+	// 						<td>{transaction.transaction}</td>
+	// 						<td>${transaction.balance.toFixed(2)}</td>
+	// 					</tr>
+	// 				))}
+	// 			</tbody>
+	// 		</table>
+	// 	</div>
+	// );
+
 	return (
 		<>
-			Email
+			<button type="submit" className="btn btn-light" onClick={handle}>
+				List Your Transactions
+			</button>
+			<br />
+			{list ? displayList : ''}
+
+			{/* Email
 			<br />
 			<input
 				type="input"
@@ -80,7 +77,7 @@ function TransactionListForm(props) {
 			<br />
 			<button type="submit" className="btn btn-light" onClick={handle}>
 				Login
-			</button>
+			</button> */}
 		</>
 	);
 }

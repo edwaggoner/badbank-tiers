@@ -53,13 +53,18 @@ function LoginForm(props) {
 		})().then((user) => {
 			if (user.error) {
 				console.log(user.error);
+				props.setStatus('Invalid credentials.');
+				return;
 			} else {
 				console.log('Successful login');
 				console.dir(user);
 				ctx.setUser(user);
+				// props.setStatus('');
 				props.setShow(false);
+				props.setStatus('');
 			}
 		});
+		// props.setShow(false);
 	}
 
 	return (

@@ -73,7 +73,6 @@ app.get('/account/withdraw/:email/:amount', function (req, res) {
 app.get('/account/transactionlist/:email/:password', function (req, res) {
 	dal.transactionList(req.params.email, req.params.password).then(
 		(userTransactionList) => {
-			console.dir(userTransactionList);
 			res.send(userTransactionList);
 		},
 		(reason) => {

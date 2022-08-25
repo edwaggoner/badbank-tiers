@@ -54,6 +54,7 @@ function login(email, password) {
 				resolve({
 					name: user.name,
 					email: user.email,
+					password: user.password,
 					balance: user.balance,
 				});
 			}
@@ -245,6 +246,7 @@ function withdraw(email, amount) {
 
 // transaction list
 function transactionList(email, password) {
+	console.log('At dal.js top, password is: ' + password);
 	return new Promise((resolve, reject) => {
 		const users = db.collection('users');
 		console.log(`Checking ${email}:${password} against user list`);
@@ -252,7 +254,6 @@ function transactionList(email, password) {
 		const userPromise = users.findOne({ email, password });
 
 		userPromise.then((user) => {
-			console.log(user);
 			if (user === null) {
 				reject({ error: 'Invalid login.' });
 				console.log('Login failed.');

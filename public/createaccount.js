@@ -9,7 +9,7 @@ function CreateAccount() {
 			status={status}
 			body={
 				show ? (
-					<CreateForm setShow={setShow} />
+					<CreateForm setShow={setShow} setStatus={setStatus} />
 				) : (
 					<CreateMsg setShow={setShow} />
 				)
@@ -47,6 +47,27 @@ function CreateForm(props) {
 
 	// from video 27.21 at 0:34
 	function handle() {
+		if (name == '') {
+			props.setStatus('You must enter a name.');
+			return;
+		}
+		if (email == '') {
+			props.setStatus('You must enter an email.');
+			return;
+		}
+		if (!email.includes('@')) {
+			props.setStatus('Your email must include @');
+			return;
+		}
+		if (password == '') {
+			props.setStatus('You must enter password.');
+			return;
+		}
+		let length = password.length;
+		if (length < 6) {
+			props.setStatus('Your password must contain at least 8 characters');
+			return;
+		}
 		console.log(name, email, password);
 		const url = `/account/create/${name}/${email}/${password}`;
 		(async () => {
@@ -59,6 +80,7 @@ function CreateForm(props) {
 			} else {
 				console.dir(user);
 				ctx.setUser(user);
+				props.setStatus('');
 			}
 		});
 		props.setShow(false);

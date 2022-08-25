@@ -40,8 +40,12 @@ function DepositForm(props) {
 	const ctx = React.useContext(UserContext);
 
 	function handle() {
-		console.log(email, amount);
-		const url = `/account/deposit/${email}/${amount}`;
+		if (amount < 0) {
+			props.setStatus('Your deposit amount must be greater than zero.');
+			return;
+		}
+		console.log(amount);
+		const url = `/account/deposit/${ctx.user.email}/${amount}`;
 		(async () => {
 			const resFromExpress = await fetch(url);
 			const data = await resFromExpress.json();
@@ -77,7 +81,7 @@ function DepositForm(props) {
 
 	return (
 		<>
-			Email
+			{/* Email
 			<br />
 			<input
 				type="input"
@@ -86,13 +90,13 @@ function DepositForm(props) {
 				value={email}
 				onChange={(e) => setEmail(e.currentTarget.value)}
 			/>
-			<br />
+			<br /> */}
 			Amount
 			<br />
 			<input
 				type="number"
 				className="form-control"
-				placeholder="Enter amount"
+				placeholder="0.00"
 				value={amount}
 				onChange={(e) => setAmount(e.currentTarget.value)}
 			/>
