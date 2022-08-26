@@ -71,6 +71,10 @@ app.get('/account/withdraw/:email/:amount', function (req, res) {
 
 // transaction list
 app.get('/account/transactionlist/:email/:password', function (req, res) {
+	console.log(
+		'at API get request for transaction request, password is: ' +
+			req.params.password
+	);
 	dal.transactionList(req.params.email, req.params.password).then(
 		(userTransactionList) => {
 			res.send(userTransactionList);

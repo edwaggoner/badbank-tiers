@@ -7,8 +7,6 @@ function TransactionList() {
 	const rat = 7;
 
 	function handle() {
-		// const ctx = React.useContext(UserContext);
-
 		const url = `/account/transactionlist/${ctx.user.email}/${ctx.user.password}`;
 		(async () => {
 			const resFromExpress = await fetch(url);
@@ -18,13 +16,13 @@ function TransactionList() {
 			if (userTransactionList.error) {
 				console.log(userTransactionList.error);
 			} else {
+				console.log(userTransactionList['receivedTransactionList'][0]);
 				list = userTransactionList['receivedTransactionList'];
-				console.log(list);
-				// console.log(list[1]);
-				// console.log(list[2]);
+				console.log(list[0]);
+				console.log(list[1]);
+				console.log(list[3]);
 			}
 		});
-		// console.log(list);
 	}
 
 	// const displayList = (
@@ -72,9 +70,6 @@ function TransactionList() {
 						<td>help</td>
 						<td>me</td>
 						<td>good angel</td>
-						{/* <td>{.email}</td>
-                <td>{user.password}</td>
-                <td>${user.balance.toFixed(2)}</td> */}
 					</tr>
 					<tr>
 						<td>{rat}</td>
