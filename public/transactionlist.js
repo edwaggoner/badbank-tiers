@@ -1,10 +1,7 @@
 function TransactionList() {
 	// const [status, setStatus] = React.useState(false);
 	const ctx = React.useContext(UserContext);
-
-	let list;
-
-	const rat = 7;
+	const [transactions, setTransactions] = React.useState([]);
 
 	function handle() {
 		const url = `/account/transactionlist/${ctx.user.email}/${ctx.user.password}`;
@@ -16,11 +13,7 @@ function TransactionList() {
 			if (userTransactionList.error) {
 				console.log(userTransactionList.error);
 			} else {
-				console.log(userTransactionList['receivedTransactionList'][0]);
-				list = userTransactionList['receivedTransactionList'];
-				console.log(list[0]);
-				console.log(list[1]);
-				console.log(list[3]);
+				setTransactions(userTransactionList.receivedTransactionList);
 			}
 		});
 	}
@@ -65,18 +58,14 @@ function TransactionList() {
 					</tr>
 				</thead>
 				<tbody>
-					<tr>
-						<td>{rat}</td>
-						<td>help</td>
-						<td>me</td>
-						<td>good angel</td>
-					</tr>
-					<tr>
-						<td>{rat}</td>
-						<td>help</td>
-						<td>me</td>
-						<td>good angel</td>
-					</tr>
+					{transactions.map((element) => (
+						<tr>
+							<td>{element.name}</td>
+							<td>{element.email}</td>
+							<td>{element.transaction}</td>
+							<td>{element.balance}</td>
+						</tr>
+					))}
 				</tbody>
 			</table>
 		</>
