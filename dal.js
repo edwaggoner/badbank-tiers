@@ -106,6 +106,7 @@ function deposit(email, amount) {
 
 					// Build transaction entry for 'transactions' collection: name, email, transaction amount, updated balance
 					const doc = {
+						createdAt: new Date(),
 						name: user.name,
 						email,
 						transaction: number,
@@ -120,6 +121,7 @@ function deposit(email, amount) {
 					);
 
 					resolve({
+						date: doc['createdAt'],
 						name: user.name,
 						email: user.email,
 						password: user.password,
@@ -176,6 +178,7 @@ function withdraw(email, amount) {
 
 					// Build transaction entry for 'transactions' collection: name, email, transaction amount, updated balance
 					const doc = {
+						createdAt: new Date(),
 						name: user.name,
 						email,
 						password: user.password,
@@ -191,6 +194,7 @@ function withdraw(email, amount) {
 					);
 
 					resolve({
+						date: doc['createdAt'],
 						name: user.name,
 						password: user.password,
 						email: user.email,

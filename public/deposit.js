@@ -40,6 +40,15 @@ function DepositForm(props) {
 	const ctx = React.useContext(UserContext);
 
 	function handle() {
+		if (!Number.isInteger(amount)) {
+			const Amount = amount.toString().split('.')[1].length;
+			if (Amount > 2) {
+				props.setStatus(
+					'Your deposit amount must not have more than two decimal places.'
+				);
+				return;
+			}
+		}
 		if (amount < 0) {
 			props.setStatus('Your deposit amount must be greater than zero.');
 			return;
@@ -64,33 +73,9 @@ function DepositForm(props) {
 			}
 		});
 	}
-	// function handle(){
-
-	//   console.log(email,amount);
-	//   const user = ctx.users.find((user) => user.email == email);
-	//   if (!user) {
-	//     props.setStatus('fail!');
-	//     return;
-	//   }
-
-	//   user.balance = user.balance + Number(amount);
-	//   console.log(user);
-	//   props.setStatus('');
-	//   props.setShow(false);
-	// }
 
 	return (
 		<>
-			{/* Email
-			<br />
-			<input
-				type="input"
-				className="form-control"
-				placeholder="Enter email"
-				value={email}
-				onChange={(e) => setEmail(e.currentTarget.value)}
-			/>
-			<br /> */}
 			Amount
 			<br />
 			<input

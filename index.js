@@ -56,19 +56,6 @@ app.get('/account/withdraw/:email/:amount', function (req, res) {
 	);
 });
 
-// balance
-// app.get('/account/balance/:email', function (req, res) {
-// 	dal.balance(req.params.email).then(
-// 		(balance) => {
-// 			console.log(balance);
-// 			res.send(balance);
-// 		},
-// 		(reason) => {
-// 			res.send(reason);
-// 		}
-// 	);
-// });
-
 // transaction list
 app.get('/account/transactionlist/:email/:password', function (req, res) {
 	console.log(

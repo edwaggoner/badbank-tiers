@@ -83,7 +83,7 @@ function NavBar() {
 			</div>
 			{ctx.user.name ? `${ctx.user.name}` : ''}
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			{ctx.user.name ? `Account balance: ${ctx.user.balance}` : ''}
+			{ctx.user.name ? `Account balance: ${ctx.user.balance.toFixed(2)}` : ''}
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			{ctx.user.name ? logoutLink : ''}
 		</nav>
