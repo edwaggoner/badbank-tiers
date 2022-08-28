@@ -2,20 +2,44 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const dal = require('./dal.js');
+const { applicationDefault, initializeApp } = require('firebase-admin/app');
+const { getAuth } = require('firebase-admin/auth');
 
 // used to serve static files from public directory
 app.use(express.static('public'));
 app.use(cors());
 
+console.log(`Env: ${process.env.GOOGLE_APPLICATION_CREDENTIALS}`);
+
+// initialize firebase-admin
+initializeApp({
+	credential: applicationDefault(),
+});
+
 // create user account
-app.get('/account/create/:name/:email/:password', function (req, res) {
-	// else create user
-	dal
-		.create(req.params.name, req.params.email, req.params.password)
-		.then((user) => {
-			console.log(user);
-			res.send(user);
+app.get('/account/create/:idtoken', function (req, res) {
+	console.log(req.params.idtoken);
+	// idToken comes from the client app
+	getAuth()
+		.verifyIdToken(req.params.idtoken)
+		.then((decodedToken) => {
+			const uid = decodedToken.uid;
+			console.log('Decoded token id is: ' + decodedToken.uid);
+			// ...
+		})
+		.catch((error) => {
+			console.log('Error in decode' + error);
+			// Handle error
 		});
+
+	res.send({});
+	// else create user
+	// dal
+	// 	.create(req.params.name, req.params.email, req.params.password)
+	// 	.then((user) => {
+	// 		console.log(user);
+	// res.send(user);
+	// 	});
 });
 
 // login

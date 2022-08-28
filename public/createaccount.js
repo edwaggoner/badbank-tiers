@@ -1,3 +1,5 @@
+//import { createUserWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/9.9.3/firebase-auth.js';
+
 function CreateAccount() {
 	const [show, setShow] = React.useState(true);
 	const [status, setStatus] = React.useState('');
@@ -46,7 +48,7 @@ function CreateForm(props) {
 	// add firebase authentication sign-up
 
 	// from video 27.21 at 0:34
-	function handle() {
+	function createUser() {
 		if (name == '') {
 			props.setStatus('You must enter a name.');
 			return;
@@ -59,6 +61,10 @@ function CreateForm(props) {
 			props.setStatus('Your email must include @');
 			return;
 		}
+		if (!email.match(/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/)) {
+			props.setStatus('Invalid email address');
+			return;
+		}
 		if (password == '') {
 			props.setStatus('You must enter password.');
 			return;
@@ -68,26 +74,45 @@ function CreateForm(props) {
 			props.setStatus('Your password must contain at least 8 characters');
 			return;
 		}
-		console.log(name, email, password);
-		const url = `/account/create/${name}/${email}/${password}`;
-		(async () => {
-			const res = await fetch(url);
-			const data = await res.json();
-			return data;
-		})().then((user) => {
-			if (user.error) {
-				console.log(user.error);
-			} else {
-				console.dir(user);
-				ctx.setUser(user);
-				props.setStatus('');
-			}
-		});
-		props.setShow(false);
-	}
 
+		auth
+			.createUserWithEmailAndPassword(email, password)
+			.then((userCredential) => {
+				// Signed in
+				const user = userCredential.user;
+				console.log(userCredential.user);
+				// Retrieve ID token
+				firebase
+					.auth()
+					.currentUser.getIdToken(true)
+					.then(function (idToken) {
+						// Send createacount ID token to API
+						const url = `/account/create/${idToken}`;
+						(async () => {
+							const res = await fetch(url);
+							const data = await res.json();
+							return data;
+						})().then((user) => {
+							if (user.error) {
+								console.log(user.error);
+							} else {
+								console.dir(user);
+								ctx.setUser(user);
+								props.setStatus('');
+							}
+						});
+						props.setShow(false);
+					});
+			})
+			.catch((error) => {
+				const errorCode = error.code;
+				const errorMessage = error.message;
+				console.dir(error);
+				// ..
+			});
+	}
 	return (
-		<>
+		<form>
 			Name
 			<br />
 			<input
@@ -101,7 +126,7 @@ function CreateForm(props) {
 			Email address
 			<br />
 			<input
-				type="input"
+				type="email"
 				className="form-control"
 				placeholder="Enter email"
 				value={email}
@@ -118,9 +143,12 @@ function CreateForm(props) {
 				onChange={(e) => setPassword(e.currentTarget.value)}
 			/>
 			<br />
-			<button type="submit" className="btn btn-light" onClick={handle}>
-				Create Account
-			</button>
-		</>
+			<input
+				type="submit"
+				value="Create Account"
+				className="btn btn-light"
+				onClick={createUser}
+			/>
+		</form>
 	);
 }
