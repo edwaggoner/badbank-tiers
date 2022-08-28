@@ -25,21 +25,16 @@ app.get('/account/create/:idtoken', function (req, res) {
 		.then((decodedToken) => {
 			const uid = decodedToken.uid;
 			console.log('Decoded token id is: ' + decodedToken.uid);
+			dal.create(uid).then((user) => {
+				console.log(user);
+				res.send(user);
+			});
 			// ...
 		})
 		.catch((error) => {
 			console.log('Error in decode' + error);
 			// Handle error
 		});
-
-	res.send({});
-	// else create user
-	// dal
-	// 	.create(req.params.name, req.params.email, req.params.password)
-	// 	.then((user) => {
-	// 		console.log(user);
-	// res.send(user);
-	// 	});
 });
 
 // login
