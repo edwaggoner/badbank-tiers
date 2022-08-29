@@ -16,6 +16,8 @@ MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
 function create(uid) {
 	return new Promise((resolve, reject) => {
 		const collection = db.collection('users');
+
+		//build
 		const doc = { uid, balance: 0 };
 		collection.insertOne(doc, { w: 1 }, function (err, result) {
 			err ? reject(err) : resolve(doc);
@@ -38,12 +40,15 @@ function login(uid) {
 			} else {
 				console.log('Logged IN!:');
 
-				// Build transaction entry for 'logins' collection: uid
-				const doc = { uid };
+				// Build entry for 'logins' collection: date, uid
+				const doc = {
+					createdAt: new Date(),
+					uid: user.uid,
+				};
 
-				// insert transaction entry into 'transactions' collection
-				const transactions = db.collection('logins');
-				transactions.insertOne(doc, { w: 1 });
+				// insert entry into 'login' collection
+				const loginList = db.collection('logins');
+				loginList.insertOne(doc, { w: 1 });
 				console.log('This login has been added to the login list');
 
 				resolve({
@@ -64,13 +69,13 @@ function deposit(uid, amount) {
 		const userPromise = users.findOne({ uid });
 
 		userPromise.then((user) => {
-			// if submitted email does not match any in 'users' collection, reject deposit
+			// if submitted uid does not match any in 'users' collection, reject deposit
 			console.log(user);
 			if (user === null) {
 				reject({ error: 'Invalid deposit.' });
 				console.log('Deposit failed.');
 			} else {
-				// if submitted email DOES match, update balance and create transaction record
+				// if submitted uid DOES match, update balance and create transaction record
 				console.log(
 					`User ${uid} balance in the user collection BEFORE this deposit is ${user.balance}`
 				);
@@ -93,10 +98,6 @@ function deposit(uid, amount) {
 
 				const resultPromise = users.findOneAndUpdate(filter, updateDoc);
 				resultPromise.then((result) => {
-					console.log(
-						`${result.MatchedCount} document(s) in 'user' collection matched the filter, updated ${result.ModifiedCount} document(s)`
-					);
-
 					// Build transaction entry for 'transactions' collection: createdAt, uid, transaction amount, updated balance
 					const doc = {
 						createdAt: new Date(),
@@ -108,9 +109,7 @@ function deposit(uid, amount) {
 					// insert transaction entry into 'transactions' collection
 					const transactions = db.collection('transactions');
 					transactions.insertOne(doc, { w: 1 });
-					console.log(
-						'This transaction has been logged in the transaction list'
-					);
+					console.log('This deposit has been logged in the transaction list');
 
 					resolve({
 						date: doc['createdAt'],
@@ -124,12 +123,12 @@ function deposit(uid, amount) {
 }
 
 // withdraw
-function withdraw(email, amount) {
+function withdraw(uid, amount) {
 	return new Promise((resolve, reject) => {
 		const users = db.collection('users');
 
 		// check submitted email against emails in 'users' collection
-		const userPromise = users.findOne({ email });
+		const userPromise = users.findOne({ uid });
 
 		userPromise.then((user) => {
 			// if submitted email does not match any in 'users' collection, reject deposit
@@ -140,7 +139,7 @@ function withdraw(email, amount) {
 			} else {
 				// if submitted email DOES match, update balance and create transaction record
 				console.log(
-					`User ${user.name} balance in the user collection BEFORE this withdrawal is ${user.balance}`
+					`User ${uid} balance in the user collection BEFORE this withdrawal is ${user.balance}`
 				);
 
 				// convert amount (string) to amount (number)
@@ -150,7 +149,7 @@ function withdraw(email, amount) {
 				updatedBalance = user.balance - number;
 
 				// create a filter selects a user to update
-				const filter = { email: email };
+				const filter = { uid: uid };
 
 				// create a document that sets the balance of the user in the 'users' collection
 				const updateDoc = {
@@ -161,16 +160,10 @@ function withdraw(email, amount) {
 
 				const resultPromise = users.findOneAndUpdate(filter, updateDoc);
 				resultPromise.then((result) => {
-					console.log(
-						`${result.MatchedCount} document(s) in 'user' collection matched the filter, updated ${result.ModifiedCount} document(s)`
-					);
-
 					// Build transaction entry for 'transactions' collection: name, email, transaction amount, updated balance
 					const doc = {
 						createdAt: new Date(),
-						name: user.name,
-						email,
-						password: user.password,
+						uid: user.uid,
 						transaction: -number,
 						balance: updatedBalance,
 					};
@@ -179,16 +172,13 @@ function withdraw(email, amount) {
 					const transactions = db.collection('transactions');
 					transactions.insertOne(doc, { w: 1 });
 					console.log(
-						'This transaction has been logged in the transaction list'
+						'This withdrawal has been logged in the transaction list'
 					);
 
 					resolve({
 						date: doc['createdAt'],
-						name: user.name,
-						password: user.password,
-						email: user.email,
-						transaction: -number,
-						balance: updatedBalance,
+						transaction: doc['transaction'],
+						balance: doc['balance'],
 					});
 				});
 			}
@@ -207,8 +197,6 @@ function transactionList(uid) {
 			if (user === null) {
 				reject({ error: 'UID not found in users collection.' });
 			} else {
-				console.log('User confirmed');
-
 				// get all of the user's entries in the 'transactions' collection
 				const transactions = db.collection('transactions');
 				const list = transactions.find({

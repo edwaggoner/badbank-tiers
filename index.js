@@ -59,14 +59,14 @@ app.get('/account/login/:idtoken', function (req, res) {
 });
 
 // deposit
-app.get('/account/deposit/:idtoken/:depositAmount', function (req, res) {
+app.get('/account/deposit/:idtoken/:depositamount', function (req, res) {
 	console.log(req.params.idtoken);
 	getAuth()
 		.verifyIdToken(req.params.idtoken)
 		.then((decodedToken) => {
 			const uid = decodedToken.uid;
 			console.log('Decoded token id is: ' + decodedToken.uid);
-			dal.deposit(uid, req.params.depositAmount).then(
+			dal.deposit(uid, req.params.depositamount).then(
 				(update) => {
 					console.log(update);
 					res.send(update);
@@ -79,15 +79,22 @@ app.get('/account/deposit/:idtoken/:depositAmount', function (req, res) {
 });
 
 // withdraw
-app.get('/account/withdraw/:email/:amount', function (req, res) {
-	dal.withdraw(req.params.email, req.params.amount).then(
-		(update) => {
-			res.send(update);
-		},
-		(reason) => {
-			res.send(reason);
-		}
-	);
+app.get('/account/withdraw/:idtoken/:withdrawamount', function (req, res) {
+	console.log(req.params.idtoken);
+	getAuth()
+		.verifyIdToken(req.params.idtoken)
+		.then((decodedToken) => {
+			const uid = decodedToken.uid;
+			console.log('Decoded token id is: ' + decodedToken.uid);
+			dal.withdraw(uid, req.params.withdrawamount).then(
+				(update) => {
+					res.send(update);
+				},
+				(reason) => {
+					res.send(reason);
+				}
+			);
+		});
 });
 
 // transaction list

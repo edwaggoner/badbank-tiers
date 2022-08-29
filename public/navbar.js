@@ -49,8 +49,22 @@ function NavBar() {
 		</li>
 	);
 
+	function logout() {
+		firebase
+			.auth()
+			.signOut()
+			.then(() => {
+				// Sign-out successful.
+				ctx.setUser({});
+				console.log('Successful logout!');
+			})
+			.catch((error) => {
+				// An error happened.
+			});
+	}
+
 	const logoutLink = (
-		<a href="/" role="button">
+		<a href="/#/" role="button" onClick={logout}>
 			Logout
 		</a>
 	);

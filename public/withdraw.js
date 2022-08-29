@@ -35,49 +35,52 @@ function WithdrawMsg(props) {
 }
 
 function WithdrawForm(props) {
-	const [email, setEmail] = React.useState('');
 	const [amount, setAmount] = React.useState('');
 	const ctx = React.useContext(UserContext);
 
-	function handle() {
-		if (!Number.isInteger(amount)) {
-			const Amount = amount.toString().split('.')[1].length;
-			if (Amount > 2) {
+	function withdraw() {
+		const withdrawAmount = Number(amount);
+		if (!Number.isInteger(withdrawAmount)) {
+			const decimalDigitCount = withdrawAmount.toString().split('.')[1].length;
+			if (decimalDigitCount > 2) {
 				props.setStatus(
 					'Your deposit amount must not have more than two decimal places.'
 				);
 				return;
 			}
 		}
-		if (amount < 0) {
+		if (withdrawAmount < 0) {
 			props.setStatus('Your withdrawal amount must be greater than zero.');
 			return;
-		} else if (amount > ctx.user.balance) {
+		} else if (withdrawAmount > ctx.user.balance) {
 			props.setStatus('You may not withdraw more than your current balance.');
 			return;
 		}
 
-		console.log(amount);
-		const url = `/account/withdraw/${ctx.user.email}/${amount}`;
-		(async () => {
-			const resFromExpress = await fetch(url);
-			const data = await resFromExpress.json();
-			return data;
-		})().then((update) => {
-			if (update.error) {
-				console.log(update.error);
-				props.setStatus('fail');
-				return;
-			} else {
-				console.log('Successful withdrawal.');
-				console.log(update.balance);
-				ctx.setUser(update);
-				props.setStatus('');
-				props.setShow(false);
-			}
-		});
+		firebase
+			.auth()
+			.currentUser.getIdToken(true)
+			.then(function (idToken) {
+				const url = `/account/withdraw/${idToken}/${withdrawAmount}`;
+				(async () => {
+					const resFromExpress = await fetch(url);
+					const data = await resFromExpress.json();
+					return data;
+				})().then((update) => {
+					if (update.error) {
+						console.log(update.error);
+						props.setStatus('fail');
+						return;
+					} else {
+						console.log('Successful withdrawal.');
+						console.dir(update);
+						ctx.setUser({ ...ctx.user, balance: update.balance });
+						props.setStatus('');
+						props.setShow(false);
+					}
+				});
+			});
 	}
-
 	return (
 		<>
 			Amount
@@ -90,7 +93,7 @@ function WithdrawForm(props) {
 				onChange={(e) => setAmount(e.currentTarget.value)}
 			/>
 			<br />
-			<button type="submit" className="btn btn-light" onClick={handle}>
+			<button type="submit" className="btn btn-light" onClick={withdraw}>
 				Withdraw
 			</button>
 		</>
