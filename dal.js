@@ -114,8 +114,8 @@ function deposit(uid, amount) {
 
 					resolve({
 						date: doc['createdAt'],
-						transaction: number,
-						balance: updatedBalance,
+						transaction: doc['transaction'],
+						balance: doc['balance'],
 					});
 				});
 			}
@@ -197,25 +197,22 @@ function withdraw(email, amount) {
 }
 
 // transaction list
-function transactionList(email, password) {
-	console.log('At dal.js top, password is: ' + password);
+function transactionList(uid) {
 	return new Promise((resolve, reject) => {
 		const users = db.collection('users');
-		console.log(`Checking ${email}:${password} against user list`);
-		// check email+password against user list
-		const userPromise = users.findOne({ email, password });
+		// check uid against user list
+		const userPromise = users.findOne({ uid });
 
 		userPromise.then((user) => {
 			if (user === null) {
-				reject({ error: 'Invalid login.' });
-				console.log('Login failed.');
+				reject({ error: 'UID not found in users collection.' });
 			} else {
 				console.log('User confirmed');
 
 				// get all of the user's entries in the 'transactions' collection
 				const transactions = db.collection('transactions');
 				const list = transactions.find({
-					name: user.name,
+					uid: user.uid,
 				});
 
 				const receivedTransactionList = [];

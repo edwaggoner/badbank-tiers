@@ -3,37 +3,27 @@ function TransactionList() {
 	const [transactions, setTransactions] = React.useState([]);
 
 	React.useEffect(() => {
-		const url = `/account/transactionlist/${ctx.user.uid}`;
-		(async () => {
-			const resFromExpress = await fetch(url);
-			const data = await resFromExpress.json();
-			return data;
-		})().then((userTransactionList) => {
-			if (userTransactionList.error) {
-				console.log(userTransactionList.error);
-			} else {
-				console.log(userTransactionList.receivedTransactionList);
-				const list = userTransactionList.receivedTransactionList;
-				setTransactions(list.reverse());
-			}
-		});
+		firebase
+			.auth()
+			.currentUser.getIdToken(true)
+			.then(function (idToken) {
+				const url = `/account/transactionlist/${idToken}`;
+				(async () => {
+					const resFromExpress = await fetch(url);
+					const data = await resFromExpress.json();
+					return data;
+				})().then((userTransactionList) => {
+					if (userTransactionList.error) {
+						console.log(userTransactionList.error);
+					} else {
+						console.log(userTransactionList.receivedTransactionList);
+						const list = userTransactionList.receivedTransactionList;
+						setTransactions(list.reverse());
+					}
+				});
+			});
 	}, []);
 
-	// function handle() {
-	// 	const url = `/account/transactionlist/${ctx.user.email}/${ctx.user.password}`;
-	// 	(async () => {
-	// 		const resFromExpress = await fetch(url);
-	// 		const data = await resFromExpress.json();
-	// 		return data;
-	// 	})().then((userTransactionList) => {
-	// 		if (userTransactionList.error) {
-	// 			console.log(userTransactionList.error);
-	// 		} else {
-	// 			console.log(userTransactionList.receivedTransactionList);
-	// 			setTransactions(userTransactionList.receivedTransactionList);
-	// 		}
-	// 	});
-	// }
 	if (transactions.length === 0) {
 		return <>Retrieving your transaction list. 😃</>;
 	}

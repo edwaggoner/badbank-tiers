@@ -35,21 +35,21 @@ function DepositMsg(props) {
 }
 
 function DepositForm(props) {
-	const [email, setEmail] = React.useState('');
 	const [amount, setAmount] = React.useState('');
 	const ctx = React.useContext(UserContext);
 
 	function deposit() {
-		if (!Number.isInteger(amount)) {
-			const Amount = amount.toString().split('.')[1].length;
-			if (Amount > 2) {
+		const depositAmount = Number(amount);
+		if (!Number.isInteger(depositAmount)) {
+			const decimalDigitCount = depositAmount.toString().split('.')[1].length;
+			if (decimalDigitCount > 2) {
 				props.setStatus(
 					'Your deposit amount must not have more than two decimal places.'
 				);
 				return;
 			}
 		}
-		if (amount < 0) {
+		if (depositAmount < 0) {
 			props.setStatus('Your deposit amount must be greater than zero.');
 			return;
 		}
@@ -58,7 +58,7 @@ function DepositForm(props) {
 			.auth()
 			.currentUser.getIdToken(true)
 			.then(function (idToken) {
-				const url = `/account/deposit/${idToken}/${amount}`;
+				const url = `/account/deposit/${idToken}/${depositAmount}`;
 				(async () => {
 					const resFromExpress = await fetch(url);
 					const data = await resFromExpress.json();
@@ -71,8 +71,7 @@ function DepositForm(props) {
 					} else {
 						console.log('Successful deposit.');
 						console.dir(update);
-						user.name = firebase.auth().currentUser;
-						ctx.setUser(update);
+						ctx.setUser({ ...ctx.user, balance: update.balance });
 						props.setStatus('');
 						props.setShow(false);
 					}
