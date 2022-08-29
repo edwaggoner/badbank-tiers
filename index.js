@@ -38,29 +38,44 @@ app.get('/account/create/:idtoken', function (req, res) {
 });
 
 // login
-app.get('/account/login/:email/:password', function (req, res) {
-	dal.login(req.params.email, req.params.password).then(
-		(credentials) => {
-			console.dir(credentials);
-			res.send(credentials);
-		},
-		(reason) => {
-			res.send(reason);
-		}
-	);
+app.get('/account/login/:idtoken', function (req, res) {
+	console.log(req.params.idtoken);
+	// idToken comes from the client app
+	getAuth()
+		.verifyIdToken(req.params.idtoken)
+		.then((decodedToken) => {
+			const uid = decodedToken.uid;
+			console.log('Decoded token id is: ' + decodedToken.uid);
+			dal.create(uid).then((user) => {
+				console.log(user);
+				res.send(user);
+			});
+			// ...
+		})
+		.catch((error) => {
+			console.log('Error in decode' + error);
+			// Handle error
+		});
 });
 
 // deposit
-app.get('/account/deposit/:email/:amount', function (req, res) {
-	dal.deposit(req.params.email, req.params.amount).then(
-		(update) => {
-			console.log(update);
-			res.send(update);
-		},
-		(reason) => {
-			res.send(reason);
-		}
-	);
+app.get('/account/deposit/:idtoken/:amount', function (req, res) {
+	console.log(req.params.idtoken);
+	getAuth()
+		.verifyIdToken(req.params.idtoken)
+		.then((decodedToken) => {
+			const uid = decodedToken.uid;
+			console.log('Decoded token id is: ' + decodedToken.uid);
+			dal.deposit(uid, req.params.amount).then(
+				(update) => {
+					console.log(update);
+					res.send(update);
+				},
+				(reason) => {
+					res.send(reason);
+				}
+			);
+		});
 });
 
 // withdraw

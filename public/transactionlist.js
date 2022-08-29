@@ -3,7 +3,7 @@ function TransactionList() {
 	const [transactions, setTransactions] = React.useState([]);
 
 	React.useEffect(() => {
-		const url = `/account/transactionlist/${ctx.user.email}/${ctx.user.password}`;
+		const url = `/account/transactionlist/${ctx.user.uid}`;
 		(async () => {
 			const resFromExpress = await fetch(url);
 			const data = await resFromExpress.json();

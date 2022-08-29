@@ -40,31 +40,73 @@ function LoginMsg(props) {
 function LoginForm(props) {
 	const [email, setEmail] = React.useState('');
 	const [password, setPassword] = React.useState('');
-	const [usererror, setUsererror] = React.useState(false);
+
 	const ctx = React.useContext(UserContext);
 
-	function handle() {
-		console.log(email, password);
-		const url = `/account/login/${email}/${password}`;
-		(async () => {
-			const resFromExpress = await fetch(url);
-			const data = await resFromExpress.json();
-			return data;
-		})().then((user) => {
-			if (user.error) {
-				console.log(user.error);
-				props.setStatus('Invalid credentials.');
-				return;
-			} else {
-				console.log('Successful login');
-				console.dir(user);
-				ctx.setUser(user);
-				// props.setStatus('');
-				props.setShow(false);
-				props.setStatus('');
-			}
-		});
-		// props.setShow(false);
+	function login() {
+		if (email == '') {
+			props.setStatus('You must enter an email.');
+			return;
+		}
+		if (!email.includes('@')) {
+			props.setStatus('Your email must include @');
+			return;
+		}
+		if (!email.match(/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/)) {
+			props.setStatus('Invalid email address');
+			return;
+		}
+		if (password == '') {
+			props.setStatus('You must enter password.');
+			return;
+		}
+		let length = password.length;
+		if (length < 6) {
+			props.setStatus('Your password must contain at least 8 characters');
+			return;
+		}
+
+		firebase
+			.auth()
+			.signInWithEmailAndPassword(email, password)
+			.then((userCredential) => {
+				// Signed in
+				const loggedInUser = userCredential.user;
+				console.log(userCredential.user);
+
+				//Retrieve ID token
+				firebase
+					.auth()
+					.currentUser.getIdToken(true)
+					.then(function (idToken) {
+						// Send login ID token to API
+						const url = `/account/login/${idToken}`;
+						(async () => {
+							const resFromExpress = await fetch(url);
+							const data = await resFromExpress.json();
+							return data;
+						})().then((user) => {
+							if (user.error) {
+								console.log(user.error);
+								props.setStatus('Invalid credentials.');
+								return;
+							} else {
+								console.log('Successful login');
+								console.dir(user);
+								user.name = loggedInUser.displayName;
+								ctx.setUser(user);
+								// props.setStatus('');
+								props.setShow(false);
+								props.setStatus('');
+							}
+						});
+					});
+			})
+			.catch((error) => {
+				const errorCode = error.code;
+				const errorMessage = error.message;
+				console.dir(error);
+			});
 	}
 
 	return (
@@ -89,7 +131,7 @@ function LoginForm(props) {
 				onChange={(e) => setPassword(e.currentTarget.value)}
 			/>
 			<br />
-			<button type="submit" className="btn btn-light" onClick={handle}>
+			<button type="submit" className="btn btn-light" onClick={login}>
 				Login
 			</button>
 			<br />

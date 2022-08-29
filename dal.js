@@ -13,10 +13,10 @@ MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
 });
 
 // create user account
-function create(name, email, password) {
+function create(uid) {
 	return new Promise((resolve, reject) => {
 		const collection = db.collection('users');
-		const doc = { name, email, password, balance: 0 };
+		const doc = { uid, balance: 0 };
 		collection.insertOne(doc, { w: 1 }, function (err, result) {
 			err ? reject(err) : resolve(doc);
 		});
@@ -24,12 +24,11 @@ function create(name, email, password) {
 }
 
 // login user
-function login(email, password) {
+function login(uid) {
 	return new Promise((resolve, reject) => {
 		const users = db.collection('users');
-		console.log(`Logging in ${email}:${password}`);
 		// check email+password against user list
-		const userPromise = users.findOne({ email, password });
+		const userPromise = users.findOne({ uid });
 
 		userPromise.then((user) => {
 			console.log(user);
@@ -39,12 +38,8 @@ function login(email, password) {
 			} else {
 				console.log('Logged IN!:');
 
-				// Build transaction entry for 'logins' collection: name, email, password
-				const doc = {
-					name: user.name,
-					email,
-					password,
-				};
+				// Build transaction entry for 'logins' collection: uid
+				const doc = { uid };
 
 				// insert transaction entry into 'transactions' collection
 				const transactions = db.collection('logins');
@@ -52,9 +47,7 @@ function login(email, password) {
 				console.log('This login has been added to the login list');
 
 				resolve({
-					name: user.name,
-					email: user.email,
-					password: user.password,
+					uid: user.uid,
 					balance: user.balance,
 				});
 			}
@@ -63,12 +56,12 @@ function login(email, password) {
 }
 
 // deposit
-function deposit(email, amount) {
+function deposit(uid, amount) {
 	return new Promise((resolve, reject) => {
 		const users = db.collection('users');
 
-		// check submitted email against emails in 'users' collection
-		const userPromise = users.findOne({ email });
+		// check submitted uid against uids in 'users' collection
+		const userPromise = users.findOne({ uid });
 
 		userPromise.then((user) => {
 			// if submitted email does not match any in 'users' collection, reject deposit
@@ -79,7 +72,7 @@ function deposit(email, amount) {
 			} else {
 				// if submitted email DOES match, update balance and create transaction record
 				console.log(
-					`User ${user.name} balance in the user collection BEFORE this deposit is ${user.balance}`
+					`User ${uid} balance in the user collection BEFORE this deposit is ${user.balance}`
 				);
 
 				// convert amount (string) to amount (number)
@@ -89,7 +82,7 @@ function deposit(email, amount) {
 				updatedBalance = user.balance + number;
 
 				// create a filter selects a user to update
-				const filter = { email: email };
+				const filter = { uid: uid };
 
 				// create a document that sets the balance of the user in the 'users' collection
 				const updateDoc = {
@@ -104,11 +97,10 @@ function deposit(email, amount) {
 						`${result.MatchedCount} document(s) in 'user' collection matched the filter, updated ${result.ModifiedCount} document(s)`
 					);
 
-					// Build transaction entry for 'transactions' collection: name, email, transaction amount, updated balance
+					// Build transaction entry for 'transactions' collection: createdAt, uid, transaction amount, updated balance
 					const doc = {
 						createdAt: new Date(),
-						name: user.name,
-						email,
+						uid: user.uid,
 						transaction: number,
 						balance: updatedBalance,
 					};
@@ -122,9 +114,6 @@ function deposit(email, amount) {
 
 					resolve({
 						date: doc['createdAt'],
-						name: user.name,
-						email: user.email,
-						password: user.password,
 						transaction: number,
 						balance: updatedBalance,
 					});

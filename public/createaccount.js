@@ -45,9 +45,6 @@ function CreateForm(props) {
 
 	const ctx = React.useContext(UserContext);
 
-	// add firebase authentication sign-up
-
-	// from video 27.21 at 0:34
 	function createUser() {
 		if (name == '') {
 			props.setStatus('You must enter a name.');
@@ -80,7 +77,24 @@ function CreateForm(props) {
 			.then((userCredential) => {
 				// Signed in
 				const user = userCredential.user;
-				console.log(userCredential.user);
+				console.log(
+					'This is the google user before updating profile name' +
+						userCredential.user
+				);
+				user
+					.updateProfile({
+						displayName: name,
+					})
+					.then(
+						function () {
+							const displayName = user.displayName;
+							console.log(displayName);
+						},
+						function (error) {
+							console.log('Error in updating displayName.');
+						}
+					);
+
 				// Retrieve ID token
 				firebase
 					.auth()
@@ -97,6 +111,7 @@ function CreateForm(props) {
 								console.log(user.error);
 							} else {
 								console.dir(user);
+								user.name = name;
 								ctx.setUser(user);
 								props.setStatus('');
 							}

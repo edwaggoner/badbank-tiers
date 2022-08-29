@@ -39,7 +39,7 @@ function DepositForm(props) {
 	const [amount, setAmount] = React.useState('');
 	const ctx = React.useContext(UserContext);
 
-	function handle() {
+	function deposit() {
 		if (!Number.isInteger(amount)) {
 			const Amount = amount.toString().split('.')[1].length;
 			if (Amount > 2) {
@@ -53,27 +53,32 @@ function DepositForm(props) {
 			props.setStatus('Your deposit amount must be greater than zero.');
 			return;
 		}
-		console.log(amount);
-		const url = `/account/deposit/${ctx.user.email}/${amount}`;
-		(async () => {
-			const resFromExpress = await fetch(url);
-			const data = await resFromExpress.json();
-			return data;
-		})().then((update) => {
-			if (update.error) {
-				console.log(update.error);
-				props.setStatus('fail');
-				return;
-			} else {
-				console.log('Successful deposit.');
-				console.dir(update);
-				ctx.setUser(update);
-				props.setStatus('');
-				props.setShow(false);
-			}
-		});
-	}
 
+		firebase
+			.auth()
+			.currentUser.getIdToken(true)
+			.then(function (idToken) {
+				const url = `/account/deposit/${idToken}/${amount}`;
+				(async () => {
+					const resFromExpress = await fetch(url);
+					const data = await resFromExpress.json();
+					return data;
+				})().then((update) => {
+					if (update.error) {
+						console.log(update.error);
+						props.setStatus('fail');
+						return;
+					} else {
+						console.log('Successful deposit.');
+						console.dir(update);
+						user.name = firebase.auth().currentUser;
+						ctx.setUser(update);
+						props.setStatus('');
+						props.setShow(false);
+					}
+				});
+			});
+	}
 	return (
 		<>
 			Amount
@@ -86,7 +91,7 @@ function DepositForm(props) {
 				onChange={(e) => setAmount(e.currentTarget.value)}
 			/>
 			<br />
-			<button type="submit" className="btn btn-light" onClick={handle}>
+			<button type="submit" className="btn btn-light" onClick={deposit}>
 				Deposit
 			</button>
 		</>
