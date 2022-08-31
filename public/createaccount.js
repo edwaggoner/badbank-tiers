@@ -27,13 +27,6 @@ function CreateMsg(props) {
 			<br />
 			<h6>Your name and account balance</h6>
 			<h6>are displayed above</h6>
-			{/* <button
-				type="submit"
-				className="btn btn-light"
-				onClick={() => props.setShow(true)}
-			>
-				Add another account
-			</button> */}
 		</>
 	);
 }
@@ -127,7 +120,7 @@ function CreateForm(props) {
 			});
 	}
 	return (
-		<form>
+		<>
 			Name
 			<br />
 			<input
@@ -164,6 +157,6 @@ function CreateForm(props) {
 				className="btn btn-light"
 				onClick={createUser}
 			/>
-		</form>
+		</>
 	);
 }
