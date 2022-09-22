@@ -12,7 +12,6 @@ function Spa() {
 							<Route path="/login/" element={<Login />} />
 							<Route path="/deposit/" element={<Deposit />} />
 							<Route path="/withdraw/" element={<Withdraw />} />
-							{/* <Route path="/transactions/" element={<Transactions/>} /> */}
 							<Route path="/balance/" element={<Balance />} />
 							<Route path="/alldata/" element={<AllData />} />
 							<Route path="/transactionlist/" element={<TransactionList />} />
