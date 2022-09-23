@@ -55,19 +55,6 @@ function BalanceForm(props) {
 		});
 	}
 
-	// function handle(){
-	//   const user = ctx.users.find((user) => user.email == email);
-	//   if (!user) {
-	//     props.setStatus('fail!')
-	//     return;
-	//   }
-
-	//   setBalance(user.balance);
-	//   console.log(user);
-	//   props.setStatus('Your balance is: ' + user.balance);
-	//   props.setShow(false);
-	// }
-
 	return (
 		<>
 			Email
