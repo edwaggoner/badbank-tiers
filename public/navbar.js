@@ -91,7 +91,6 @@ function NavBar() {
 					{!ctx.user.name ? loginLink : ''}
 					{ctx.user.name ? depositLink : ''}
 					{ctx.user.name ? withdrawLink : ''}
-					{/* {ctx.user.name ? balanceLink : ''} */}
 					{ctx.user.name ? transactionListLink : ''}
 				</ul>
 			</div>
